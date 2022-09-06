@@ -3,7 +3,7 @@ import os
 if __name__ == '__main__':
     from menu_core import Menu
 else:
-    from menus.menu_core import Menu
+    from repeat_word.menus.menus import Menu
 
 
 def print_header(text):
@@ -93,7 +93,7 @@ class WorkDict(Menu):
 
     def add(self):
         new_file_name = input('Название нового словаря: ')
-        open(f'files/{new_file_name}', 'a').close()
+        open(f'files/{new_file_name}.txt', 'a').close()
         self.app.phonetic_word_list.set_file_name(new_file_name)
 
     def edit(self):

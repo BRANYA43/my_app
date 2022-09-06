@@ -1,4 +1,3 @@
-import csv
 import os
 from random import randint
 
@@ -69,15 +68,19 @@ class App:
     """Класс Программа"""
     def __init__(self):
         """Инициализирует список с PhoneticWord и главное меню"""
+        self.score = 0
         self.phonetic_word_list = PhoneticWordList()
         self.main_menu = Main(self)
 
-    @staticmethod
-    def get_answer(correct_answer: str, input_answer: str) -> str:
+    def add_score(self, point: float):
+        self.score += point
+
+    def get_answer(self, correct_answer: str, input_answer: str, point: float) -> str:
         """Проверяет введённый ответ и возвращает результат."""
         ret = ''
         if input_answer.lower() == correct_answer.lower():
             ret += f'Правильно, {input_answer}.'
+            self.add_score(point)
         else:
             ret += f'Ответ {input_answer} не правильный.\n'\
                    f'Правильно будет {correct_answer}.'
@@ -87,27 +90,33 @@ class App:
         """Запускает мини программу повторения слов."""
         self.phonetic_word_list.load_file()
         count_word = len(self.phonetic_word_list.list) - 1
+        max_point = count_word
 
         while count_word > 0:
+            count_word -= 1
             rand_index = randint(0, count_word)
             phonetic_word = self.phonetic_word_list.get_phonetic_word(rand_index)
             print(phonetic_word.get_word())
             transcription = f'[{input("Транскрипция: ")}]'
             translation = input('Перевод: ')
-            print(self.get_answer(phonetic_word.get_transcription(), transcription))
-            print(self.get_answer(phonetic_word.get_translation(), translation))
+            print(self.get_answer(phonetic_word.get_transcription(), transcription, 0.5))
+            print(self.get_answer(phonetic_word.get_translation(), translation, 0.5))
+        print(f'{self.score}/{max_point}')
 
     def repeat_ru_en(self):
         """Запускает мини программу повторения слов."""
         self.phonetic_word_list.load_file()
         count_word = len(self.phonetic_word_list.list) - 1
+        max_point = count_word
 
         while count_word > 0:
+            count_word -= 1
             rand_index = randint(0, count_word)
             phonetic_word = self.phonetic_word_list.get_phonetic_word(rand_index)
             print(phonetic_word.get_translation())
             word = input('Перевод: ')
-            print(phonetic_word.get_word(), word)
+            print(self.get_answer(phonetic_word.get_word(), word, 1))
+        print(f'{self.score}/{max_point}')
 
 
 def main():
